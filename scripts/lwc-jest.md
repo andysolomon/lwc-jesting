@@ -49,26 +49,46 @@ This is planting assertions on lwc dom selectors that we select using `shadowRoo
 Here are some common DOM Jest Matchers.
 1. .toBe()
 2. .toMatchObject()
-3. .not()
-4. .toContain()
+3. .toContain()
+
+Here are some common DOM Jest Modifiers
+1. .not()
 
 #### Functional Unit Testing
 Functional unit testing is the practice of testing functions in the LWC. The LWC is simply an es6 class composed of all functions all created by the author. We are not allowed to publicly access the elements in an LWC component so directly testing functions is not possible without using stubs and/or mocks
 
 ## Testing in VSCode
 
-## Triggering Events
-### dispatchEvent()
-
-## Data Binding
-Listening for events 
+## Stubs/Mocks/Spies
+### Stubs
+Stubbing is the idea of having a fake/stub function that has the same public interface as the real function but doesn't actually execute real behavior.
+Stubs return artificial and pre-programmed values or errors
+### Mock/Spy
+Mocks are differ from spies in the sense that mocks conceptually is really just an umbrella term to represt any replacement module. A mock may contain stubs or spies.
+#### Mocks
+#### Spies
+Along with mocking data we also need to mock core lwc base components like the NavigationMixin and 
+### jest.mock
+Using mocks allow us to test our component without need for a an actual Saleforce backend. Everything that our LWC component relies on or is that is imported will most likely mocked.
 
 ## Data Mocking
 ### require(./data/testdata.json)
 
-## Stubs/Mocks
-Along with mocking data we also need to mock core lwc base components like the NavigationMixin and 
-### jest.mock
+## Event Handling Mocks
+When testing event handlers whats important during testing is that the event was called, and what parameters the event was called with. Afterwards we want to flushPromises and make assertions on those claims.
+We create handler spies for our events like so
+```javascript
+const handler = jest.fn();
+element.addEventListener(ShowToastEventName, handler)
+```
+This way whenever our event is called our handler will spy on all calls and we can traverse the calls. using the following syntax against the hanlder
+```
+handler.mock.calls[][].detail.title
+```
+This syntax represents the parameter that was called for a specific call to the event handler.
+- toHaveBeenCalled()
+
+## Self Mocks
 
 ## Wire Service
 ### Wired Apex
@@ -85,4 +105,14 @@ When applying user interaction that will force any updates its best to use a res
 ## Debugging in VSCode
 ### Run Time Debugging
 In VS Code thanks to the Saleforce Extensions we have a "Run and Debug" option where we use this along with a Console Debug window to monitor and track our tests as the run in real time. You can also create a [launch.json](https://github.com/salesforce/sfdx-lwc-jest?tab=readme-ov-file#debugging-in-visual-studio-code) file for more control over run time debugging.
-Breakpoints can be used in both component source and test files to pause debugger during run time.
+Breakpoints cannot be used in both component source and test files to pause debugger during run time. You must use the actual `debugger;` statement.
+
+### Life Cycle Hooks
+- Creation Hooks
+- Mounting Hooks
+- Updating Hooks
+- Unmounting Hooks
+- Error Handling Hooks
+- Debugging Hooks
+- Keep-Alive Component Hooks
+- Server-Side Rendering Hooks
